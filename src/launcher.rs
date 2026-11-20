@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
 use std::thread;
+use std::time::Duration;
 
 use windows::Win32::System::Registry::{HKEY_CURRENT_USER, RRF_RT_REG_SZ, RegGetValueW};
 use windows::core::w;
@@ -23,6 +24,14 @@ pub fn run(command: Vec<String>, shared: Arc<Shared>) {
         move || match Command::new(&command[0]).args(&command[1..]).spawn() {
             Ok(mut child) => {
                 let code = child.wait().ok().and_then(|s| s.code()).unwrap_or(0);
+                // Steam's DSX.exe is a stub: it starts Main_v3_Beta\DSX.exe via a scheduled
+                // task (not a child) and exits, so stay up while anything from its folder runs.
+                // focus-rumble.exe itself must live outside that folder.
+                if let Some(dir) = Path::new(&command[0]).parent() {
+                    while is_running_from(dir) {
+                        thread::sleep(Duration::from_secs(2));
+                    }
+                }
                 std::process::exit(code);
             }
             Err(e) => {
