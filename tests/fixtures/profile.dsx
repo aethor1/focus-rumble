@@ -1,0 +1,10 @@
+{
+    "profile_name": "Default",
+    "note": "audio_haptics_output_device_id",
+    "audio_haptics_enabled": true,
+    "audio_haptics_output_device_id": "",
+    "audio_to_rumble_enabled": false,
+    "audio_to_rumble_output_device_id": "{0.0.0.00000000}.{9a1c3e2b-7d4f-4c1a-8e6b-2f5d9c0b7a31}",
+    "lightbar": { "r": 0, "g": 120, "b": 255 },
+    "triggers": [1, 2.5, null, "x\"y"]
+}

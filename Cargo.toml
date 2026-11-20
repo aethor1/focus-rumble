@@ -1,0 +1,22 @@
+[package]
+name = "focus-rumble"
+version = "0.1.0"
+edition = "2024"
+description = "Routes only the focused app's audio into VB-Cable for DSX audio-to-haptics"
+license = "MIT"
+
+[target.'cfg(windows)'.dependencies]
+eframe = { version = "0.37", default-features = false, features = ["default_fonts", "glow", "links"] }
+wasapi = "0.27"
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_System_Diagnostics_ToolHelp",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_UI_Accessibility",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[profile.release]
+lto = "thin"
+strip = true
