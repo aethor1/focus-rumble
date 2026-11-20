@@ -62,7 +62,7 @@ impl Fifo {
     /// Append interleaved samples, applying any pending fade-in, and drop the
     /// oldest frames if the queue grew past `max_frames` (clock drift).
     pub fn push(&mut self, data: &[f32]) {
-        for frame in data.chunks_exact(CHANNELS) {
+        for frame in data.as_chunks::<CHANNELS>().0 {
             let gain = if self.fade_in_left > 0 {
                 let g = 1.0 - self.fade_in_left as f32 / self.fade_frames as f32;
                 self.fade_in_left -= 1;
@@ -105,7 +105,9 @@ impl Fifo {
         for (i, frame) in self
             .buf
             .make_contiguous()
-            .chunks_exact_mut(CHANNELS)
+            .as_chunks_mut::<CHANNELS>()
+            .0
+            .iter_mut()
             .enumerate()
         {
             let gain = 1.0 - (i + 1) as f32 / frames as f32;
